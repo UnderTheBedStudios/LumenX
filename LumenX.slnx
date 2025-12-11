@@ -1,0 +1,8 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="LumenXEditor/LumenXEditor.csproj" Id="8381915c-5336-4da8-8a16-e94cd1c155a2" />
+  <Project Path="Engine/Engine.vcxproj" Id="4b9a8245-fbba-4f2e-aed1-0a80825542d4" />
+</Solution>
