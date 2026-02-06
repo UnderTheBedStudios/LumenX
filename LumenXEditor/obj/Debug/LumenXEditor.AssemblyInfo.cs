@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LumenXEditor")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0daed752285adecc8b74bc22d5e7bd60587941ae")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c7dace7f86e6ba0230602624134b53515aa77ec6")]
 [assembly: System.Reflection.AssemblyProductAttribute("LumenXEditor")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LumenXEditor")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

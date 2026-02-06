@@ -31,16 +31,17 @@ namespace LumenXEditor.GameProject
 	{
 		// TODO: get the path from the instalation location
 		private readonly string _templatePath = @"..\..\ProjectTemplates";
-		private string _name = "NewLumenXProject";
-		public string Name
+		private string _projectProjectName = "NewLumenXProject";
+		public string ProjectName
 		{
-			get => _name;
+			get => _projectProjectName;
 			set
 			{
-				if (_name != value)
+				if (_projectProjectName != value)
 				{
-					_name = value;
-					OnPropertyChanged(nameof(Name));
+					_projectProjectName = value;
+					ValidateProjectPath();
+					OnPropertyChanged(nameof(ProjectName));
 				}
 			}
 		}
@@ -54,7 +55,37 @@ namespace LumenXEditor.GameProject
 				if (_projectPath != value)
 				{
 					_projectPath = value;
+					ValidateProjectPath();
 					OnPropertyChanged(nameof(Path));
+				}
+			}
+		}
+
+		private bool _isValid;
+		public bool IsValid
+		{
+			get => _isValid;
+			set
+			{
+				if (_isValid != value)
+				{
+					_isValid = value;
+					OnPropertyChanged(nameof(IsValid));
+				}
+			}
+		}
+
+		private string _errorMsg;
+
+		public string ErrorMsg
+		{
+			get => _errorMsg;
+			set
+			{
+				if (_errorMsg != value)
+				{
+					_errorMsg = value;
+					OnPropertyChanged(nameof(ErrorMsg));
 				}
 			}
 		}
@@ -63,6 +94,42 @@ namespace LumenXEditor.GameProject
 		public ReadOnlyObservableCollection<ProjectTemplate> ProjectTemplates
 		{
 			get;
+		}
+
+		private bool ValidateProjectPath()
+		{
+			var path = ProjectPath;
+			if (!Path.EndsInDirectorySeparator(path)) path += @"\";
+			path += $@"{ProjectName}\";
+
+			IsValid = false;
+			if (string.IsNullOrWhiteSpace(ProjectName.Trim()))
+			{
+				ErrorMsg = "Project name cannot be empty";
+			}
+			else if (ProjectName.IndexOfAny(Path.GetInvalidFileNameChars()) != -1)
+			{
+				ErrorMsg = "Project name cannot contain invalid characters";
+			}
+			else if (string.IsNullOrWhiteSpace((ProjectPath.Trim())))
+			{
+				ErrorMsg = "Project path cannot be empty";
+			}
+			else if (ProjectPath.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+			{
+				ErrorMsg = "Project path cannot contain invalid characters";
+			}
+			else if (Path.Exists(path) && Directory.EnumerateFileSystemEntries(path).Any())
+			{
+				ErrorMsg = "Selected project folder already exists and is not empty";
+			}
+			else
+			{
+				ErrorMsg = string.Empty;
+				IsValid = true;
+			}
+
+			return IsValid;
 		}
 
 		public NewProject()
@@ -83,6 +150,8 @@ namespace LumenXEditor.GameProject
 					
 					_projectTemplates.Add(template);
 				}
+
+				ValidateProjectPath();
 			}
 			catch (Exception ex)
 			{
