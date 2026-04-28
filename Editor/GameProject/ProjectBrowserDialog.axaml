@@ -1,0 +1,13 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:LumenX.GameProject"
+        x:Class="LumenX.GameProject.ProjectBrowserDialog"
+        Title="Project Browser"
+        CanResize="False"
+        Width="800"
+        Height="450"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+
+    </Grid>
+</Window>
