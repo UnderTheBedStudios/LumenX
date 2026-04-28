@@ -62,3 +62,4 @@
 /mnt/GAEMS/Visual Studio Code/LumenX/Editor/obj/Debug/net10.0/LumenX.csproj.Up2Date
 /mnt/GAEMS/Visual Studio Code/LumenX/Editor/obj/Debug/net10.0/LumenX.genruntimeconfig.cache
 /mnt/GAEMS/Visual Studio Code/LumenX/Editor/obj/Debug/net10.0/ref/LumenX.dll
+/mnt/GAEMS/Visual Studio Code/LumenX/Editor/obj/Debug/net10.0/LumenX.sourcelink.json

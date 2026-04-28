@@ -24,5 +24,8 @@ build_property.EnableCodeStyleSeverity =
 [/mnt/GAEMS/Visual Studio Code/LumenX/Editor/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/mnt/GAEMS/Visual Studio Code/LumenX/Editor/GameProject/ProjectBrowserDialog.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/mnt/GAEMS/Visual Studio Code/LumenX/Editor/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
