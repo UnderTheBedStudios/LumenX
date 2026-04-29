@@ -8,6 +8,23 @@
         Height="450"
         WindowStartupLocation="CenterScreen">
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20">
+            <ToggleButton Content="Open Project" x:Name="OpenProjectButton" FontSize="32"
+            Click="ButtonClick" IsChecked="True"/>
+            <ToggleButton Content="Create Project" x:Name="CreateProjectButton" FontSize="32"
+            Margin="30,0,0,0" Click="ButtonClick"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" x:Name="ContentPanel">
+            <Border Width="800" Background="LightBlue">
+                <TextBlock Text="Open Project" FontSize="50"></TextBlock>
+            </Border>
+            <Border Width="800" Background="LightGreen">
+                <TextBlock Text="Create Project" FontSize="50"></TextBlock>
+            </Border>
+        </StackPanel>
     </Grid>
 </Window>
