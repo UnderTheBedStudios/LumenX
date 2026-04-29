@@ -5,7 +5,8 @@
         Title="LumenX Editor"
         Width="1280"
         Height="720"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Background="#FF141414">
     <Grid>
         
     </Grid>

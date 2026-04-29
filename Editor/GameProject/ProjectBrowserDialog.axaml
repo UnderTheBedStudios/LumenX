@@ -6,7 +6,8 @@
         CanResize="False"
         Width="800"
         Height="450"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Background="#FF141414">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -14,17 +15,35 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20">
             <ToggleButton Content="Open Project" x:Name="OpenProjectButton" FontSize="32"
-            Click="ButtonClick" IsChecked="True"/>
+            Click="ButtonClick" IsChecked="True" Background="#b3b3b3"/>
             <ToggleButton Content="Create Project" x:Name="CreateProjectButton" FontSize="32"
             Margin="30,0,0,0" Click="ButtonClick"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="1" x:Name="ContentPanel">
             <Border Width="800" Background="LightBlue">
-                <TextBlock Text="Open Project" FontSize="50"></TextBlock>
+                <TextBlock Text="Open Project" FontSize="50" Foreground="#1c1c1c"></TextBlock>
             </Border>
             <Border Width="800" Background="LightGreen">
-                <TextBlock Text="Create Project" FontSize="50"></TextBlock>
+                <TextBlock Text="Create Project" FontSize="50" Foreground="#1c1c1c"></TextBlock>
             </Border>
         </StackPanel>
     </Grid>
+    <Window.Styles>
+        <Style Selector="ToggleButton:checked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#ed8f42" />
+            <Setter Property="Foreground" Value="#1c1c1c" />
+        </Style>
+        <Style Selector="ToggleButton:unchecked:pressed /template/ ContentPresenter#PART_ContentPresenter:hover">
+            <Setter Property="Background" Value="#ff7d14" />
+            <Setter Property="Foreground" Value="#1c1c1c" />
+        </Style>
+        <Style Selector="ToggleButton:unchecked:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#cc986e" />
+            <Setter Property="Foreground" Value="#1c1c1c" />
+        </Style>
+        <Style Selector="ToggleButton:unchecked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#b3b3b3" />
+            <Setter Property="Foreground" Value="#1c1c1c" />
+        </Style>
+    </Window.Styles>
 </Window>
