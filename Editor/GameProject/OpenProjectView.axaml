@@ -1,0 +1,17 @@
+<UserControl x:Class="LumenX.GameProject.OpenProjectView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:LumenX.GameProject"
+             Height="450" Width="800">
+    <StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <ListBox Width="200" Height="250" Background="#d4cdc7"/>
+            <Border Width="400" Height="250" Margin="5,0,0,0"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,30,0,0">
+            <Button Content="Open Project" Width="96" Height="25" FontSize="10"/>
+            <Button Content="Exit" Width="96" Height="25" FontSize="10" Margin="5,0,0,0"/>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

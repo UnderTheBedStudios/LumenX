@@ -55,6 +55,10 @@
             "Avalonia.Themes.Fluent": {
               "target": "Package",
               "version": "[11.0.10, )"
+            },
+            "Tmds.DBus.Protocol": {
+              "target": "Package",
+              "version": "[0.16.0, )"
             }
           },
           "imports": [

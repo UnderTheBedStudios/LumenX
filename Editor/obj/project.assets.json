@@ -461,7 +461,7 @@
           "lib/netcoreapp2.0/_._": {}
         }
       },
-      "Tmds.DBus.Protocol/0.15.0": {
+      "Tmds.DBus.Protocol/0.16.0": {
         "type": "package",
         "compile": {
           "lib/net6.0/Tmds.DBus.Protocol.dll": {}
@@ -1274,17 +1274,17 @@
         "version.txt"
       ]
     },
-    "Tmds.DBus.Protocol/0.15.0": {
-      "sha512": "QVo/Y39nTYcCKBqrZuwHjXdwaky0yTQPIT3qUTEEK2MZfDtZWrJ2XyZ59zH8LBgB2fL5cWaTuP2pBTpGz/GeDQ==",
+    "Tmds.DBus.Protocol/0.16.0": {
+      "sha512": "9Ne9AvrRWrDQvzbMcbTz3EaGRE1vQmkeeu0Xp7Ii0Wdlhwfjst8FDRas+RBslU5kdPWs2aeMLErzyT1DwH9zeA==",
       "type": "package",
-      "path": "tmds.dbus.protocol/0.15.0",
+      "path": "tmds.dbus.protocol/0.16.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/net6.0/Tmds.DBus.Protocol.dll",
         "lib/netstandard2.0/Tmds.DBus.Protocol.dll",
         "lib/netstandard2.1/Tmds.DBus.Protocol.dll",
-        "tmds.dbus.protocol.0.15.0.nupkg.sha512",
+        "tmds.dbus.protocol.0.16.0.nupkg.sha512",
         "tmds.dbus.protocol.nuspec"
       ]
     }
@@ -1293,7 +1293,8 @@
     "net10.0": [
       "Avalonia >= 11.0.10",
       "Avalonia.Desktop >= 11.0.10",
-      "Avalonia.Themes.Fluent >= 11.0.10"
+      "Avalonia.Themes.Fluent >= 11.0.10",
+      "Tmds.DBus.Protocol >= 0.16.0"
     ]
   },
   "packageFolders": {
@@ -1350,6 +1351,10 @@
           "Avalonia.Themes.Fluent": {
             "target": "Package",
             "version": "[11.0.10, )"
+          },
+          "Tmds.DBus.Protocol": {
+            "target": "Package",
+            "version": "[0.16.0, )"
           }
         },
         "imports": [
@@ -1657,7 +1662,7 @@
       "code": "NU1903",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'Tmds.DBus.Protocol' 0.15.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-xrw6-gwf8-vvr9",
+      "message": "Package 'Tmds.DBus.Protocol' 0.16.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-xrw6-gwf8-vvr9",
       "libraryId": "Tmds.DBus.Protocol",
       "targetGraphs": [
         "net10.0"

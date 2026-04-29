@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "HJ79DR1dEcU=",
+  "dgSpecHash": "JIrNpOrtxNg=",
   "success": true,
   "projectFilePath": "/mnt/GAEMS/Visual Studio Code/LumenX/Editor/LumenX.csproj",
   "expectedPackageFiles": [
@@ -27,14 +27,14 @@
     "/home/peber/.nuget/packages/skiasharp.nativeassets.webassembly/2.88.7/skiasharp.nativeassets.webassembly.2.88.7.nupkg.sha512",
     "/home/peber/.nuget/packages/skiasharp.nativeassets.win32/2.88.7/skiasharp.nativeassets.win32.2.88.7.nupkg.sha512",
     "/home/peber/.nuget/packages/system.componentmodel.annotations/4.5.0/system.componentmodel.annotations.4.5.0.nupkg.sha512",
-    "/home/peber/.nuget/packages/tmds.dbus.protocol/0.15.0/tmds.dbus.protocol.0.15.0.nupkg.sha512",
+    "/home/peber/.nuget/packages/tmds.dbus.protocol/0.16.0/tmds.dbus.protocol.0.16.0.nupkg.sha512",
     "/home/peber/.nuget/packages/microsoft.aspnetcore.app.ref/10.0.3/microsoft.aspnetcore.app.ref.10.0.3.nupkg.sha512"
   ],
   "logs": [
     {
       "code": "NU1903",
       "level": "Warning",
-      "message": "Package 'Tmds.DBus.Protocol' 0.15.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-xrw6-gwf8-vvr9",
+      "message": "Package 'Tmds.DBus.Protocol' 0.16.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-xrw6-gwf8-vvr9",
       "projectPath": "/mnt/GAEMS/Visual Studio Code/LumenX/Editor/LumenX.csproj",
       "warningLevel": 1,
       "filePath": "/mnt/GAEMS/Visual Studio Code/LumenX/Editor/LumenX.csproj",

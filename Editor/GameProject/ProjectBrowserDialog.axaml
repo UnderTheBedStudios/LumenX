@@ -5,7 +5,7 @@
         Title="Project Browser"
         CanResize="False"
         Width="800"
-        Height="450"
+        Height="550"
         WindowStartupLocation="CenterScreen"
         Background="#FF141414">
     <Grid>
@@ -20,12 +20,8 @@
             Margin="30,0,0,0" Click="ButtonClick"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="1" x:Name="ContentPanel">
-            <Border Width="800" Background="LightBlue">
-                <TextBlock Text="Open Project" FontSize="50" Foreground="#1c1c1c"></TextBlock>
-            </Border>
-            <Border Width="800" Background="LightGreen">
-                <TextBlock Text="Create Project" FontSize="50" Foreground="#1c1c1c"></TextBlock>
-            </Border>
+            <local:OpenProjectView/>
+            <local:NewProjectView/>
         </StackPanel>
     </Grid>
     <Window.Styles>
