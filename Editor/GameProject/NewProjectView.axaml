@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:LumenX.GameProject"
              Height="450" Width="800">
+    <UserControl.DataContext>
+        <local:NewProject/>
+    </UserControl.DataContext>
     <StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <ListBox Width="200" Height="250" Background="#d4cdc7"/>
@@ -10,11 +13,11 @@
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,30,0,0">
             <TextBlock Text="Name" Width="50"/>
-            <TextBox Width="550" Height="5"/>
+            <TextBox Width="550" Height="5" Text="{Binding ProjectName}"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,0">
             <TextBlock Text="Path" Width="50"/>
-            <TextBox Width="500" Height="5"/>
+            <TextBox Width="500" Height="5" Text="{Binding ProjectPath}"/>
             <Button Content="Browse" Width="45" Margin="5,0,0,0" FontSize="8"></Button>
         </StackPanel>
 
