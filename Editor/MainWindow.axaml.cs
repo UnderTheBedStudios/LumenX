@@ -24,7 +24,8 @@ public partial class MainWindow : Window
     private async void OpenProjectBrowserDialog()
     {
         var dialog = new ProjectBrowserDialog();
-        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        if (Application.Current?.ApplicationLifetime is 
+            IClassicDesktopStyleApplicationLifetime desktop)
         {
             await dialog.ShowDialog(desktop.MainWindow);
 
