@@ -5,9 +5,41 @@
         Title="Project Browser"
         CanResize="False"
         Width="800"
-        Height="450"
-        WindowStartupLocation="CenterScreen">
+        Height="550"
+        WindowStartupLocation="CenterScreen"
+        Background="#FF141414">
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20">
+            <ToggleButton Content="Open Project" x:Name="OpenProjectButton" FontSize="32"
+            Click="ButtonClick" IsChecked="True" Background="#b3b3b3"/>
+            <ToggleButton Content="Create Project" x:Name="CreateProjectButton" FontSize="32"
+            Margin="30,0,0,0" Click="ButtonClick"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" x:Name="ContentPanel">
+            <local:OpenProjectView/>
+            <local:NewProjectView/>
+        </StackPanel>
     </Grid>
+    <Window.Styles>
+        <Style Selector="ToggleButton:checked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#ed8f42" />
+            <Setter Property="Foreground" Value="#1c1c1c" />
+        </Style>
+        <Style Selector="ToggleButton:unchecked:pressed /template/ ContentPresenter#PART_ContentPresenter:hover">
+            <Setter Property="Background" Value="#ff7d14" />
+            <Setter Property="Foreground" Value="#1c1c1c" />
+        </Style>
+        <Style Selector="ToggleButton:unchecked:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#cc986e" />
+            <Setter Property="Foreground" Value="#1c1c1c" />
+        </Style>
+        <Style Selector="ToggleButton:unchecked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#b3b3b3" />
+            <Setter Property="Foreground" Value="#1c1c1c" />
+        </Style>
+    </Window.Styles>
 </Window>

@@ -10,7 +10,8 @@
         "dependencies": {
           "Avalonia": "11.0.10",
           "Avalonia.Desktop": "11.0.10",
-          "Avalonia.Themes.Fluent": "11.0.10"
+          "Avalonia.Themes.Fluent": "11.0.10",
+          "Tmds.DBus.Protocol": "0.16.0"
         },
         "runtime": {
           "LumenX.dll": {}
@@ -101,7 +102,7 @@
       "Avalonia.FreeDesktop/11.0.10": {
         "dependencies": {
           "Avalonia": "11.0.10",
-          "Tmds.DBus.Protocol": "0.15.0"
+          "Tmds.DBus.Protocol": "0.16.0"
         },
         "runtime": {
           "lib/net6.0/Avalonia.FreeDesktop.dll": {
@@ -329,11 +330,11 @@
           }
         }
       },
-      "Tmds.DBus.Protocol/0.15.0": {
+      "Tmds.DBus.Protocol/0.16.0": {
         "runtime": {
           "lib/net6.0/Tmds.DBus.Protocol.dll": {
-            "assemblyVersion": "0.15.0.0",
-            "fileVersion": "0.15.0.0"
+            "assemblyVersion": "0.16.0.0",
+            "fileVersion": "0.16.0.0"
           }
         }
       }
@@ -478,12 +479,12 @@
       "path": "skiasharp.nativeassets.win32/2.88.7",
       "hashPath": "skiasharp.nativeassets.win32.2.88.7.nupkg.sha512"
     },
-    "Tmds.DBus.Protocol/0.15.0": {
+    "Tmds.DBus.Protocol/0.16.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-QVo/Y39nTYcCKBqrZuwHjXdwaky0yTQPIT3qUTEEK2MZfDtZWrJ2XyZ59zH8LBgB2fL5cWaTuP2pBTpGz/GeDQ==",
-      "path": "tmds.dbus.protocol/0.15.0",
-      "hashPath": "tmds.dbus.protocol.0.15.0.nupkg.sha512"
+      "sha512": "sha512-9Ne9AvrRWrDQvzbMcbTz3EaGRE1vQmkeeu0Xp7Ii0Wdlhwfjst8FDRas+RBslU5kdPWs2aeMLErzyT1DwH9zeA==",
+      "path": "tmds.dbus.protocol/0.16.0",
+      "hashPath": "tmds.dbus.protocol.0.16.0.nupkg.sha512"
     }
   }
 }
