@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LumenX")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a706ee62f5bd1c3cb03f45d8ffb51892c95fa098")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d9b44930ee789b3c1a3a47fa435a5d9142812efc")]
 [assembly: System.Reflection.AssemblyProductAttribute("LumenX")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LumenX")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
