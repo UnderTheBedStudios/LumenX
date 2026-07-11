@@ -1,0 +1,3 @@
+/mnt/GAEMS/Visual Studio Code/LumenX/build/CMakeFiles/Engine.dir
+/mnt/GAEMS/Visual Studio Code/LumenX/build/CMakeFiles/edit_cache.dir
+/mnt/GAEMS/Visual Studio Code/LumenX/build/CMakeFiles/rebuild_cache.dir

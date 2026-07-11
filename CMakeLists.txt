@@ -6,8 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 # Add your files
 add_library(Engine SHARED 
-    Engine.cpp 
-    pch.cpp
+    Engine/Engine.cpp 
+    Engine/pch.cpp
 )
 
 # If you have include folders

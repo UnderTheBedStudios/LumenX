@@ -36,6 +36,7 @@ namespace LumenX.GameProject
                 if (_projectName != value)
                 {
                     _projectName = value;
+                    ProjectPathValidation();
                     OnPropertyChanged(nameof(ProjectName));
                 }
             }
@@ -50,13 +51,70 @@ namespace LumenX.GameProject
                 if (_projectPath != value)
                 {
                     _projectPath = value;
+                    ProjectPathValidation();
                     OnPropertyChanged(nameof(ProjectPath));
                 }
             }
         }
 
         private ObservableCollection<ProjectTemplate> _templates = new ObservableCollection<ProjectTemplate>();
-        private ReadOnlyObservableCollection<ProjectTemplate> Templates { get ;}
+        public ReadOnlyObservableCollection<ProjectTemplate> Templates { get ;}
+
+        private bool ProjectPathValidation()
+        {
+            var path = ProjectPath;
+
+            if (!Path.EndsInDirectorySeparator(path)) path += @"\";
+            path += $@"{ProjectName}\";
+
+            ValidProj = false;
+
+            if (string.IsNullOrWhiteSpace(ProjectName.Trim()))
+                ErrorCode = "Project name cannot be empty.";
+            else if (ProjectName.IndexOfAny(Path.GetInvalidFileNameChars()) != -1)
+                ErrorCode = "Project name contains invalid characters.";
+            else if (string.IsNullOrWhiteSpace(ProjectPath.Trim()))
+                ErrorCode = "Project path cannot be empty.";
+            else if (ProjectPath.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+                ErrorCode = "Project path contains invalid characters.";
+            else if (Directory.Exists(path) && Directory.EnumerateFileSystemEntries(path).Any())
+                ErrorCode = "A non-empty directory with the same name already exists.";
+            else
+            {
+                ErrorCode = string.Empty;
+                ValidProj = true;
+            }
+
+            return ValidProj;
+        }
+
+        private bool _validProj;
+        public bool ValidProj
+        {
+            get => _validProj;
+            set
+            {
+                if (_validProj != value)
+                {
+                    _validProj = value;
+                    OnPropertyChanged(nameof(ValidProj));
+                }
+            }
+        }
+
+        private string _errorCode;
+        public string ErrorCode
+        {
+            get => _errorCode;
+            set
+            {
+                if (_errorCode != value)
+                {
+                    _errorCode = value;
+                    OnPropertyChanged(nameof(ErrorCode));
+                }
+            }
+        }   
 
         public NewProject()
         {
@@ -80,6 +138,8 @@ namespace LumenX.GameProject
 
                     _templates.Add(template);
                 }
+
+                ProjectPathValidation();
             }
             catch (Exception ex)
             {
