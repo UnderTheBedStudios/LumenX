@@ -22,10 +22,10 @@ namespace LumenX.GameProject
         public string ScreenshotPath { get; set; }
     }
 
-    class NewProject : ViewModel
+    public class NewProject : ViewModel
     {
         //TODO: Load the templates from installation location
-        private readonly string _templateDir = @"../../../ProjectTemplates";
+        private readonly string _templateDir = Path.Combine(AppContext.BaseDirectory, "ProjectTemplates");
         private string _projectName = "New Project";
         public string ProjectName
         {
@@ -124,7 +124,7 @@ namespace LumenX.GameProject
 
             try
             {
-                if (Directory.Exists(path)) Directory.CreateDirectory(path);
+                if (!Directory.Exists(path)) Directory.CreateDirectory(path);
                 foreach (var folder in template.Folders)
                 {
                     Directory.CreateDirectory(Path.Combine(path, folder));
@@ -136,7 +136,7 @@ namespace LumenX.GameProject
                 File.Copy(template.ScreenshotPath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "Screenshot.png")));
 
                 var project = new Project(ProjectName, path);
-                Serializer.ToFile(project, path + "ProjectName" + Project.Extension);
+                Serializer.ToFile(project, path + $"{ProjectName}" + Project.Extension);
                 return path;
             }
             catch (Exception ex)

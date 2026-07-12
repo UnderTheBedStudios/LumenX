@@ -1,3 +1,18 @@
+/mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/ProjectTemplates/EmptyProject/Icon.png
+/mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/ProjectTemplates/EmptyProject/project.lumenx
+/mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/ProjectTemplates/EmptyProject/Screenshot.png
+/mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/ProjectTemplates/EmptyProject/template.xml
+/mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/ProjectTemplates/FirstPersonProject/Icon.png
+/mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/ProjectTemplates/FirstPersonProject/Screenshot.png
+/mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/ProjectTemplates/FirstPersonProject/template.xml
+/mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/ProjectTemplates/Templates.blend
+/mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/ProjectTemplates/Templates.blend1
+/mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/ProjectTemplates/ThirdPersonProject/Icon.png
+/mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/ProjectTemplates/ThirdPersonProject/Screenshot.png
+/mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/ProjectTemplates/ThirdPersonProject/template.xml
+/mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/ProjectTemplates/TopDownProject/Icon.png
+/mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/ProjectTemplates/TopDownProject/Screenshot.png
+/mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/ProjectTemplates/TopDownProject/template.xml
 /mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/LumenX
 /mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/LumenX.deps.json
 /mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/LumenX.runtimeconfig.json
@@ -85,3 +100,6 @@
 /mnt/GAEMS/Visual Studio Code/LumenX/Editor/obj/Debug/net10.0/LumenX.pdb
 /mnt/GAEMS/Visual Studio Code/LumenX/Editor/obj/Debug/net10.0/LumenX.genruntimeconfig.cache
 /mnt/GAEMS/Visual Studio Code/LumenX/Editor/obj/Debug/net10.0/ref/LumenX.dll
+/mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/ProjectTemplates/FirstPersonProject/project.lumenx
+/mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/ProjectTemplates/ThirdPersonProject/project.lumenx
+/mnt/GAEMS/Visual Studio Code/LumenX/Editor/bin/Debug/net10.0/ProjectTemplates/TopDownProject/project.lumenx

@@ -27,11 +27,14 @@ public partial class MainWindow : Window
         if (Application.Current?.ApplicationLifetime is 
             IClassicDesktopStyleApplicationLifetime desktop)
         {
-            await dialog.ShowDialog(desktop.MainWindow);
+            var projectCreated = await dialog.ShowDialog<bool>(desktop.MainWindow);
 
-            desktop.Shutdown();
+            if (!projectCreated)
+            {
+                desktop.Shutdown();
+            }
         }
-    }
+}
 
     // Adding this tells the compiler we expect the XAML to provide the logic
     private void InitializeComponent()
