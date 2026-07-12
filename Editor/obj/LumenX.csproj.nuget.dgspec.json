@@ -46,19 +46,19 @@
           "dependencies": {
             "Avalonia": {
               "target": "Package",
-              "version": "[11.1.*, )"
+              "version": "[12.1.0, )"
             },
             "Avalonia.Desktop": {
               "target": "Package",
-              "version": "[11.1.*, )"
+              "version": "[12.1.0, )"
             },
             "Avalonia.Themes.Fluent": {
               "target": "Package",
-              "version": "[11.1.*, )"
+              "version": "[12.1.0, )"
             },
             "Tmds.DBus.Protocol": {
               "target": "Package",
-              "version": "[0.16.0, )"
+              "version": "[0.94.1, )"
             }
           },
           "imports": [

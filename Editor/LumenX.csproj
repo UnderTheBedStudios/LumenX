@@ -21,10 +21,10 @@
 
   <!-- Use Avalonia instead of WPF -->
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.1.*" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.1.*" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.*" />
-    <PackageReference Include="Tmds.DBus.Protocol" Version="0.16.0" />
+    <PackageReference Include="Avalonia" Version="12.1.0" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.1.0" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.0" />
+    <PackageReference Include="Tmds.DBus.Protocol" Version="0.94.1" />
   </ItemGroup>
 
 </Project>

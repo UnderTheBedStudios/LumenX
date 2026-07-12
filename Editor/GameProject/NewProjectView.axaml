@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:LumenX.GameProject"
              xmlns:conv="clr-namespace:LumenX.Converters"
+             x:DataType="local:NewProject"
              Height="450" Width="800">
     <UserControl.DataContext>
         <local:NewProject/>
@@ -15,7 +16,7 @@
             <ListBox Width="200" Height="250" Background="#d4cdc7"
             ItemsSource="{Binding Templates}" x:Name="templateList" SelectedIndex="0">
                 <ListBox.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="local:ProjectTemplate">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="{Binding Icon, Converter={StaticResource BytesToBitmap}}" Margin="0,0,5,0"
                             Width="32" Height="32"/>
@@ -26,7 +27,7 @@
             </ListBox>
             <Border Width="400" Height="250" Margin="5,0,0,0">
                 <Border.Background>
-                    <ImageBrush Source="{Binding Path=SelectedItem.Preview, ElementName=templateList, Converter={StaticResource BytesToBitmap}}"/>
+                    <ImageBrush Source="{Binding Path=SelectedItem.Preview, ElementName=templateList, Converter={StaticResource BytesToBitmap}, x:CompileBindings=False}"/>
                 </Border.Background>
             </Border>
         </StackPanel>
