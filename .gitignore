@@ -1,4 +1,5 @@
 # Ignore all of these bro T-T
+build
 **/build/
 **/bin/
 **/obj/
