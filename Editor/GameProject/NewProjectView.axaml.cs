@@ -11,6 +11,7 @@ namespace LumenX.GameProject;
 public partial class NewProjectView : UserControl
 {
     private Button exitButton => this.FindControl<Button>("ExitButton");
+    private ListBox templateListBox => this.FindControl<ListBox>("templateList");
 
     public NewProjectView()
     {
@@ -27,9 +28,36 @@ public partial class NewProjectView : UserControl
         if (sender == exitButton)
         {
             // Close the parent window
-            if (Application.Current?.ApplicationLifetime is 
+            if (Application.Current?.ApplicationLifetime is
                 IClassicDesktopStyleApplicationLifetime desktop)
                 desktop.Shutdown();
         }
+    }
+
+    private void createButton_Click(object? sender, RoutedEventArgs e)
+    {
+        Console.WriteLine($"[DEBUG] DataContext type: {DataContext?.GetType().FullName ?? "NULL"}");
+        Console.WriteLine($"[DEBUG] templateListBox is null: {templateListBox == null}");
+        var viewModel = DataContext as NewProject;
+        if (viewModel == null)
+        {
+            // This will tell you immediately if this is the problem
+            System.Diagnostics.Debug.WriteLine($"DataContext is actually: {DataContext?.GetType().Name ?? "null"}");
+            return;
+        }
+
+        var projectPath = viewModel.CreateProject(templateListBox.SelectedItem as ProjectTemplate);
+        bool dialogResult = false;
+        var win = TopLevel.GetTopLevel(this) as Window;
+
+        if (win == null)
+        {
+            System.Diagnostics.Debug.WriteLine("TopLevel is not a Window");
+            return;
+        }
+
+        if (!string.IsNullOrEmpty(projectPath)) dialogResult = true;
+
+        win.Close(dialogResult);
     }
 }
