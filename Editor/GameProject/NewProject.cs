@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.Serialization;
-using System.IO;
 using LumenX.Utils;
 
 namespace LumenX.GameProject
@@ -19,8 +18,8 @@ namespace LumenX.GameProject
         public byte[] Icon { get; set; }
         public string IconPath { get; set; }
 
-        public byte[] Preview { get; set; }
-        public string PreviewPath { get; set; }
+        public byte[] Screenshot { get; set; }
+        public string ScreenshotPath { get; set; }
     }
 
     class NewProject : ViewModel
@@ -62,7 +61,9 @@ namespace LumenX.GameProject
 
         private bool ProjectPathValidation()
         {
-            var path = Path.Combine(ProjectPath, ProjectName);
+            var path = ProjectPath;
+            if (!Path.EndsInDirectorySeparator(path)) path += @"/";
+            path += $@"{ProjectName}/";
 
             ValidProj = false;
 
@@ -111,7 +112,41 @@ namespace LumenX.GameProject
                     OnPropertyChanged(nameof(ErrorCode));
                 }
             }
-        }   
+        }  
+
+        public string CreateProject(ProjectTemplate template)
+        {
+            ProjectPathValidation();
+            if (!ValidProj) return string.Empty;
+
+            if(!Path.EndsInDirectorySeparator(ProjectPath)) ProjectPath += @"/";
+            var path = $@"{ProjectPath}{ProjectName}/";
+
+            try
+            {
+                if (Directory.Exists(path)) Directory.CreateDirectory(path);
+                foreach (var folder in template.Folders)
+                {
+                    Directory.CreateDirectory(Path.Combine(path, folder));
+                }  
+
+                var dirInfo = new DirectoryInfo(path + @".LumenX/");
+                dirInfo.Attributes |= FileAttributes.Hidden;
+                File.Copy(template.IconPath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "Icon.png")));
+                File.Copy(template.ScreenshotPath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "Screenshot.png")));
+
+                var project = new Project(ProjectName, path);
+                Serializer.ToFile(project, path + "ProjectName" + Project.Extension);
+                return path;
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions (e.g., log the error, show a message to the user)
+                Console.WriteLine($"Error creating project: {ex.Message}");
+                //TODO: Log error code
+                return string.Empty;
+            }
+        }
 
         public NewProject()
         {
@@ -128,8 +163,8 @@ namespace LumenX.GameProject
                     template.IconPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(file), "Icon.png"));
                     template.Icon = File.ReadAllBytes(template.IconPath);
 
-                    template.PreviewPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(file), "Screenshot.png"));
-                    template.Preview = File.ReadAllBytes(template.PreviewPath);
+                    template.ScreenshotPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(file), "Screenshot.png"));
+                    template.Screenshot = File.ReadAllBytes(template.ScreenshotPath);
 
                     template.File = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(file), template.File));
 

@@ -27,9 +27,20 @@ public partial class NewProjectView : UserControl
         if (sender == exitButton)
         {
             // Close the parent window
-            if (Application.Current?.ApplicationLifetime is 
+            if (Application.Current?.ApplicationLifetime is
                 IClassicDesktopStyleApplicationLifetime desktop)
                 desktop.Shutdown();
         }
+    }
+
+    private void createButton_Click(object? sender, RoutedEventArgs e)
+    {
+        var viewModel = DataContext as NewProject;
+        var projectPath = viewModel.CreateProject(templateList.SelectedItem as ProjectTemplate);
+        bool dialogResult = false;
+        var win = TopLevel.GetTopLevel(this) as Window;
+        if(!string.IsNullOrEmpty(projectPath)) dialogResult = true;
+
+        win.Close(dialogResult);
     }
 }
