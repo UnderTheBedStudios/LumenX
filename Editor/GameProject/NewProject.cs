@@ -9,17 +9,17 @@ namespace LumenX.GameProject
     public class ProjectTemplate
     {
         [DataMember]
-        public string Type { get; set; }
+        public required string Type { get; set; }
         [DataMember]
-        public string File { get; set; }
+        public required string File { get; set; }
         [DataMember]
-        public List<string> Folders { get; set; }
+        public required List<string> Folders { get; set; }
 
-        public byte[] Icon { get; set; }
-        public string IconPath { get; set; }
+        public required byte[] Icon { get; set; }
+        public required string IconPath { get; set; }
 
-        public byte[] Screenshot { get; set; }
-        public string ScreenshotPath { get; set; }
+        public required byte[] Screenshot { get; set; }
+        public required string ScreenshotPath { get; set; }
     }
 
     public class NewProject : ViewModel
@@ -135,8 +135,11 @@ namespace LumenX.GameProject
                 File.Copy(template.IconPath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "Icon.png")));
                 File.Copy(template.ScreenshotPath, Path.GetFullPath(Path.Combine(dirInfo.FullName, "Screenshot.png")));
 
-                var project = new Project(ProjectName, path);
-                Serializer.ToFile(project, path + $"{ProjectName}" + Project.Extension);
+                var projectFile = File.ReadAllText(template.File);
+                projectFile = string.Format(projectFile, ProjectName, ProjectPath);
+                var projectPath = Path.GetFullPath(Path.Combine(path, $"{ProjectName}{Project.Extension}"));
+                File.WriteAllText(projectPath, projectFile);
+
                 return path;
             }
             catch (Exception ex)

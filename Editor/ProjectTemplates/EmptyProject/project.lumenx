@@ -1,0 +1,13 @@
+<Game z:Id="i1" xmlns="http://schemas.datacontract.org/2004/07/LumenX.GameProject"
+    xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/">
+    <ProjectName>{0}</ProjectName>
+    <ProjectPath>{1}</ProjectPath>
+    <Worlds>
+        <World z:Id="i2">
+            <Active>true</Active>
+            <WorldName>Default World</WorldName>
+            <_project z:Ref="i1"/>
+        </World>
+    </Worlds>
+</Game>

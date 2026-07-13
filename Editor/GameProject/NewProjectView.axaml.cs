@@ -56,7 +56,16 @@ public partial class NewProjectView : UserControl
             return;
         }
 
-        if (!string.IsNullOrEmpty(projectPath)) dialogResult = true;
+        if (!string.IsNullOrEmpty(projectPath))
+        {
+            dialogResult = true;
+            var project = OpenProject.Open(new ProjectData()
+            {
+                ProjectName = viewModel.ProjectName,
+                ProjectPath = viewModel.ProjectPath
+            });
+            win.DataContext = project;
+        }
 
         win.Close(dialogResult);
     }

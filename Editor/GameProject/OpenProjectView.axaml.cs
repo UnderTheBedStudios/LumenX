@@ -11,10 +11,12 @@ namespace LumenX.GameProject;
 public partial class OpenProjectView : UserControl
 {
     private Button exitButton => this.FindControl<Button>("ExitButton");
+    private ListBox projectListBox => this.FindControl<ListBox>("projectList");
 
     public OpenProjectView()
     {
         InitializeComponent();
+        projectListBox.DoubleTapped += projectList_DoubleTapped;
     }
 
     private void InitializeComponent()
@@ -27,9 +29,42 @@ public partial class OpenProjectView : UserControl
         if (sender == exitButton)
         {
             // Close the parent window
-            if (Application.Current?.ApplicationLifetime is 
+            if (Application.Current?.ApplicationLifetime is
                 IClassicDesktopStyleApplicationLifetime desktop)
                 desktop.Shutdown();
         }
+    }
+
+    private void openProjectButton_Click(object? sender, RoutedEventArgs e)
+    {
+        OpenSelectedProject();
+    }
+
+    private void projectList_DoubleTapped(object? sender, Avalonia.Input.TappedEventArgs e)
+    {
+        OpenSelectedProject();
+    }
+
+    private void OpenSelectedProject()
+    {
+        Console.WriteLine($"[DEBUG] projectListBox is null: {projectListBox == null}");
+
+        var project = OpenProject.Open(projectListBox.SelectedItem as ProjectData);
+        bool dialogResult = false;
+        var win = TopLevel.GetTopLevel(this) as Window;
+
+        if (win == null)
+        {
+            System.Diagnostics.Debug.WriteLine("TopLevel is not a Window");
+            return;
+        }
+
+        if (project != null)
+        {
+            dialogResult = true;
+            win.DataContext = project;
+        }
+
+        win.Close(dialogResult);
     }
 }
