@@ -1,18 +1,42 @@
 <UserControl x:Class="LumenX.GameProject.OpenProjectView"
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:LumenX.Converters"
              xmlns:local="clr-namespace:LumenX.GameProject"
+             x:DataType="local:OpenProject"
              Height="450" Width="800">
+    <UserControl.DataContext>
+        <local:OpenProject/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <conv:ByteArrayToImageConverter x:Key="BytesToBitmap"/>
+    </UserControl.Resources>
     <StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <ListBox Width="200" Height="250" Background="#d4cdc7"/>
-            <Border Width="400" Height="250" Margin="5,0,0,0"/>
+            <ListBox Width="200" Height="250" Background="#d4cdc7"
+            ItemsSource="{Binding Projects}" x:Name="projectList" SelectedIndex="0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="local:ProjectData">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{Binding Icon, Converter={StaticResource BytesToBitmap}}" Margin="0,0,5,0"
+                            Width="32" Height="32"/>
+                            <TextBlock Text="{Binding ProjectName}"></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Border Width="400" Height="250" Margin="5,0,0,0">
+                <Border.Background>
+                    <ImageBrush Source="{Binding Path=SelectedItem.Screenshot, ElementName=projectList, Converter={StaticResource BytesToBitmap},
+                     x:CompileBindings=False}"/>
+                </Border.Background>
+            </Border>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="100,100,0,0">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,50,0,0">
             <Button Content="Open Project" Width="96" Height="25" FontSize="10"
-            IsDefault="True"/>
-            <Button Content="Exit" Width="96" Height="25" FontSize="10" Margin="5,0,0,0"
+            IsDefault="True" Click="openProjectButton_Click" x:Name="openProjectButton"/>
+            <Button Content="Exit" Width="96" Height="25" FontSize="10" Margin="30,0,0,0"
             IsCancel="True" Click="Button_Click" x:Name="ExitButton"/>
         </StackPanel>
     </StackPanel>

@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System.ComponentModel;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
@@ -13,12 +14,19 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         Loaded += OnMainWindowLoaded;
+        Closing += OnMainWindowClosing;
     }
 
     private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
     {
         Loaded -= OnMainWindowLoaded;
         OpenProjectBrowserDialog();
+    }
+
+    private void OnMainWindowClosing(object sender, CancelEventArgs e)
+    {
+        Closing -= OnMainWindowClosing;
+        Project.Current?.Unload();
     }
 
     private async void OpenProjectBrowserDialog()
@@ -29,9 +37,15 @@ public partial class MainWindow : Window
         {
             var projectCreated = await dialog.ShowDialog<bool>(desktop.MainWindow);
 
-            if (!projectCreated)
+            if (!projectCreated || dialog.DataContext == null)
             {
                 desktop.Shutdown();
+            }
+            else
+            {
+                Project.Current?.Unload();
+                DataContext = dialog.DataContext;
+                Console.WriteLine($"[DEBUG] MainWindow DataContext: {DataContext}");
             }
         }
 }

@@ -24,6 +24,21 @@ namespace LumenX.GameProject
         [DataMember]
         public Project _project { get; private set;}
 
+        private bool _active;
+        [DataMember]
+        public bool Active
+        {
+            get => _active;
+            set
+            {
+                if (_active != value)
+                {
+                    _active = value;
+                    OnPropertyChanged(nameof(Active));
+                }
+            }
+        }
+
         public World(string name, Project project)
         {
             Debug.Assert(project != null, "Project cannot be null");
