@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 # GLAD is plain C, giving it a small target
 add_library(glad STATIC Engine/vendor/glad/src/glad.c)
 target_include_directories(glad PUBLIC Engine/vendor/glad/include)
+set_target_properties(glad PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 find_package(OpenGL REQUIRED)
 
