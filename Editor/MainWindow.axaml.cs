@@ -48,7 +48,24 @@ public partial class MainWindow : Window
                 Console.WriteLine($"[DEBUG] MainWindow DataContext: {DataContext}");
             }
         }
-}
+    }
+
+    private void CreateOpenProject(object sender, RoutedEventArgs e)
+    {
+        OpenProjectBrowserDialog();
+    }
+
+    private void OnSaveProject(object sender, RoutedEventArgs e)
+    {
+        if (Project.Current != null)
+            Project.Save(Project.Current);
+    }
+
+    private void OnExit(object sender, RoutedEventArgs e)
+    {
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            desktop.Shutdown();
+    }
 
     // Adding this tells the compiler we expect the XAML to provide the logic
     private void InitializeComponent()
