@@ -6,7 +6,7 @@
 - I will be checking forks, and if someone gets macOS working, I will implement it. (With credit, of course)
 - It should work perfectly fine with Visual Studio Code as the IDE by using the `LumenX.code-workspace` as the workspace for this whole thing instead of just using the folder
 - I am only testing this on Arch Linux, because I don't like Microsoft so I'm not using Windows. If there is an issue, make an issue report in the repo or better yet, make a fork and do it for me, I as of currently don't have anyone to test Windows Builds on.
-- I am thinking about using Vulkan for this project because all GPUs can run this.
+- I am thinking about using OpenGL for this project because all GPUs can run this.
 - I'm hoping to make this both 3D and 2D (Kinda like Unity) so that you can make as many games as possible.
 - I want this to be free and useful for everyone, without requiring people to credit my game engine or make any required payments. (Though some donations would be nice and some credit, but it's all optional)
 
@@ -24,11 +24,11 @@
 sequenceDiagram
     User->>Editor: User Interacts with Editor
     Editor->>Engine: Editor acts as a messenger for the User, Interacting with Engine.
-    Engine->>Vulkan Rendering: Gives Vulkan things to render.
-    Vulkan Rendering->>Engine: Renders everything for Engine.
+    Engine->>OpenGL Rendering: Gives OpenGL things to render.
+    OpenGL Rendering->>Engine: Renders everything for Engine.
     Engine->>Editor: Gives the Editor what it wants (Unless it's code, it will need to be compiled first).
     Editor->>User: Gives User what they want.
-    Vulkan Rendering->>User: Gives User Visual Feedback of the output.
+    OpenGL Rendering->>User: Gives User Visual Feedback of the output.
 ```
 As you can see, everything should go back and fourth depending on the inputs you give the Editor. Inputs and outputs
 
