@@ -10,6 +10,7 @@
         Background="#FF141414">
     <Grid>
         <editors:LevelEditorView
-        HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+        HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
     </Grid>
 </Window>
