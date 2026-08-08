@@ -1,0 +1,42 @@
+<UserControl x:Class="LumenX.Editors.ProjectLayoutView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:LumenX.Editors"
+             xmlns:proj="clr-namespace:LumenX.GameProject"
+             mc:Ignorable="d"
+             Height="720" Width="1280"
+             x:DataType="proj:Project"
+             d:DataContext="{d:DesignInstance Type=proj:Project, IsDesignTimeCreatable=True}"
+             Background="#00000000">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Button Content="Add World" Width="96" Height="30"
+        VerticalAlignment="Center" Focusable="False" Grid.Row="0"
+        HorizontalAlignment="Left" Margin="20,0,0,0"/>
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Worlds}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="proj:World">
+                        <Expander IsExpanded="{Binding Active, Mode=OneWay}">
+                            <Expander.Header>
+                                <Grid>
+                                    <TextBlock Text="{Binding WorldName}"/>
+                                </Grid>
+                            </Expander.Header>
+                        </Expander>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

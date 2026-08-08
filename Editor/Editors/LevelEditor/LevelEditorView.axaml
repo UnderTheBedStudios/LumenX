@@ -1,0 +1,34 @@
+<UserControl x:Class="LumenX.Editors.LevelEditorView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:LumenX.Editors"
+             Height="720" Width="1280"
+             Background="#00000000">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <GridSplitter Grid.Row="1" Height="5"
+            HorizontalAlignment="Stretch" VerticalAlignment="Top"
+            Background="#AFAFAF"/>
+        </Grid>
+        <GridSplitter Grid.Column="1" Width="5"
+        HorizontalAlignment="Left" VerticalAlignment="Stretch"
+        Background="#AFAFAF"/>
+        <Grid Grid.Column="1" Margin="5,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <GridSplitter Grid.Row="1" Height="5"
+            HorizontalAlignment="Stretch" VerticalAlignment="Top"
+            Background="#AFAFAF"/>
+        </Grid>
+    </Grid>
+</UserControl>
