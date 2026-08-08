@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -42,6 +43,25 @@ namespace LumenX.GameProject
         public static Project Current => Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop ?
         desktop.MainWindow.DataContext as Project : null;
         #endregion
+
+        public static UndoRedo undoRedo { get; } = new UndoRedo();
+
+        public ICommand Undo { get; private set;}
+        public ICommand Redo { get; private set; }
+
+        public ICommand AddWorld { get; private set; }
+        public ICommand RemoveWorld { get; private set; }
+
+        private void AddWorldInternal(string worldName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(worldName.Trim()));
+            _worlds.Add(new World(worldName, this));
+        }
+        private void RemoveWorldInternal(World world)
+        {
+            Debug.Assert(_worlds.Contains(world));
+            _worlds.Remove(world);
+        }
         
         public static Project Load(string file)
         {
@@ -69,7 +89,32 @@ namespace LumenX.GameProject
                 OnPropertyChanged(nameof(Worlds));
             }
             ActiveWorld =  Worlds.FirstOrDefault(x=>x.Active);
-            Console.WriteLine($"[DEBUG] Active World: {ActiveWorld.WorldName}");
+
+            AddWorld = new RelayCommand<object>(x =>
+            {
+                AddWorldInternal($"New World {_worlds.Count}");
+                var newWorld = _worlds.Last();
+                var worldIndex = _worlds.Count - 1;
+                undoRedo.Add(new UndoRedoAction(
+                    () => RemoveWorldInternal(newWorld),
+                    () => _worlds.Insert(worldIndex, newWorld),
+                    $"Add {newWorld.WorldName}"));
+            });
+
+            RemoveWorld = new RelayCommand<World>(x =>
+            {
+                var worldIndex = _worlds.IndexOf(x);
+                RemoveWorldInternal(x);
+
+                undoRedo.Add(new UndoRedoAction(
+                    () => _worlds.Insert(worldIndex, x),
+                    () => RemoveWorldInternal(x),
+                    $"Remove {x.WorldName}"
+                ));
+            }, x => !x.Active);
+
+            Undo = new RelayCommand<object>(x => undoRedo.Undo());
+            Redo = new RelayCommand<object>(x => undoRedo.Redo());
         }
         
         public Project(string name, string path)
