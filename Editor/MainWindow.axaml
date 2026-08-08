@@ -32,6 +32,11 @@
             <MenuItem Header="_Help">
                 <MenuItem Header="Stop it, Get some help"/>
             </MenuItem>
+
+            <Separator />
+
+            <Button Content="Play/Stop"/>
+            <Button Content="Game View  Editor View"/>
         </Menu>
 
         <editors:LevelEditorView
