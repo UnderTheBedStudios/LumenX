@@ -16,7 +16,7 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <local:EngineViewport Grid.Row="0"/>
+            <local:EngineViewport Grid.Row="0" Focusable="true"/>
             <GridSplitter Grid.Row="1" Height="5"
             HorizontalAlignment="Stretch" VerticalAlignment="Top"
             Background="#AFAFAF"/>

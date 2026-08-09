@@ -51,20 +51,15 @@ You may also need to input some commands into the terminal.
 4. Before we do anything else with the terminal, we should open a command panel you'll see at the top of the screen by pressing `Ctl+Shift+P`
 5. Click in the command panel and type in
 > ```shell
-> > CMake: Build All Projects
+> > CMake: Build
 > ```
 6. Then type in this command in the terminal
 > ```shell
 > dotnet build
 > ```
+7. Then all you need to do now is run the project!
+>```shell
+> dotnet run
+>```
 
-Alright, you have fully installed LumenX, now you need to do a few more things.
-1. Open your file explorer
-> IE. File Explorer, Dolphin, etc
-2. Go into your LumenX folder
-3. Go into the Editor folder inside the LumenX folder
-4. Enter the bin folder
-5. Go into x64
-6. Then go into Release
-7. Open net10.0
-8. Then there should be a LumenX executable
+# I hope you all enjoy the Engine! Best Reguards!
