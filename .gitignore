@@ -3,6 +3,5 @@ build
 **/build/
 **/bin/
 **/obj/
-**/.vscode/
 
 .gitignore
