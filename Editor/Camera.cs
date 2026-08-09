@@ -10,6 +10,7 @@ public class Camera
     public Vector3 Position = new(0,0,3);
     public float Yaw = -90f, Pitch = 0f;
     public float MoveSpeed = 5f, LookSensitivity = 0.15f;
+    public float PanSensitivity = 0.01f;
 
     public void ApplyMouseDelta(double dx, double dy)
     {
@@ -30,6 +31,15 @@ public class Camera
         if (keys.Contains(Key.D)) Position += right * speed;
         if (keys.Contains(Key.Q)) Position -= Vector3.UnitY * speed;
         if (keys.Contains(Key.E)) Position += Vector3.UnitY * speed;
+    }
+
+    public void ApplyPivot(double dx, double dy, float dt)
+    {
+       var right = Vector3.Normalize(Vector3.Cross(Forward, Vector3.UnitY));
+        var up = Vector3.Normalize(Vector3.Cross(right, Forward));
+
+        Position += right * (float)dx * PanSensitivity;
+        Position -= up * (float)dy * PanSensitivity;
     }
 
     public Matrix4x4 GetViewMatrix() =>
