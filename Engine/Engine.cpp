@@ -12,17 +12,17 @@ namespace {
 GLuint g_VAO = 0;
 GLuint g_VBO = 0;
 GLuint g_ShaderProgram = 0;
-GLint g_AspectRatioLoc = -1;
+GLint g_ViewProjLoc = -1;
 
 const char* vertexShaderSrc = R"(
 #version 460 core
 layout (location = 0) in vec3 aPos;
 
-uniform float uAspectRatio;
+uniform mat4 uViewProj;
 
 void main()
 {
-    gl_Position = vec4(aPos.x / uAspectRatio, aPos.y, aPos.z, 1.0);
+    gl_Position = uViewProj * vec4(aPos, 1.0);
 }
 )";
 
@@ -77,26 +77,39 @@ void InitTriangle()
     glDeleteShader(fragmentShader);
 
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f
+        0.5f,  0.5f, 0.0f,  // 0: top right
+        0.5f, -0.5f, 0.0f,  // 1: bottom right
+        -0.5f,  0.5f, 0.0f,  // 2: top left
+        -0.5f, -0.5f, 0.0f,  // 3: bottom left
     };
+
+    unsigned int indices[] = {
+        0, 1, 2,   // top right, bottom right, top left
+        1, 3, 2    // bottom right, bottom left, top left
+    };
+
+    unsigned int EBO;
+    glGenBuffers(1, &EBO);
 
     glGenVertexArrays(1, &g_VAO);
     glGenBuffers(1, &g_VBO);
 
-    glBindVertexArray(g_VAO);
 
+    glBindVertexArray(g_VAO);
+    
     glBindBuffer(GL_ARRAY_BUFFER, g_VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
+    
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    g_AspectRatioLoc = glGetUniformLocation(g_ShaderProgram, "uAspectRatio");
+    g_ViewProjLoc = glGetUniformLocation(g_ShaderProgram, "uViewProj");
 }
 
 } // anonymous namespace
@@ -115,7 +128,7 @@ void Engine_Init(void* getProcAddress)
     InitTriangle();
 }
 
-void Engine_RenderFrame(int fb, int width, int height)
+void Engine_RenderFrame(int fb, int width, int height, const float* viewProj)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, fb);
     glViewport(0, 0, width, height);
@@ -126,10 +139,11 @@ void Engine_RenderFrame(int fb, int width, int height)
     glUseProgram(g_ShaderProgram);
 
     float aspectRatio = (height > 0) ? (float)width / (float)height : 1.0f;
-    glUniform1f(g_AspectRatioLoc, aspectRatio);
+    glUniformMatrix4fv(g_ViewProjLoc, 1, GL_FALSE, viewProj);
 
     glBindVertexArray(g_VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
 }
 
 }

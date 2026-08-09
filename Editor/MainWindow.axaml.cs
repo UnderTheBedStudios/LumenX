@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Input;
 using LumenX.GameProject;
 
 namespace LumenX;
@@ -48,6 +49,12 @@ public partial class MainWindow : Window
                 Console.WriteLine($"[DEBUG] MainWindow DataContext: {DataContext}");
             }
         }
+    }
+
+    protected override void OnPointerPressed(PointerPressedEventArgs e)
+    {
+        Console.WriteLine($"[Diag] Window saw click, Source={e.Source}");
+        base.OnPointerPressed(e);
     }
 
     private void CreateOpenProject(object sender, RoutedEventArgs e)
