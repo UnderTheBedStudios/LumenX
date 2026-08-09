@@ -9,6 +9,6 @@ namespace LumenX
         internal static extern void Engine_Init(IntPtr getProcAddress);
 
         [DllImport("Engine")]
-        internal static extern void Engine_RenderFrame(int fb, int width, int height);
+        internal static extern void Engine_RenderFrame(int fb, int width, int height, ref System.Numerics.Matrix4x4 viewProj);
     }
 }
