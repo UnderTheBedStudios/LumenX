@@ -4,6 +4,8 @@
 #include "framework.h"
 #include <glad/glad.h>
 #include <cstdio>
+#include <chrono>
+#include <math.h>
 
 typedef void* (*GLADloadproc)(const char* name);
 
@@ -13,6 +15,8 @@ GLuint g_VAO = 0;
 GLuint g_VBO = 0;
 GLuint g_ShaderProgram = 0;
 GLint g_ViewProjLoc = -1;
+
+auto start_time = std::chrono::steady_clock::now();
 
 const char* vertexShaderSrc = R"(
 #version 460 core
@@ -30,9 +34,11 @@ const char* fragmentShaderSrc = R"(
 #version 460 core
 out vec4 FragColor;
 
+uniform vec4 vertexColor;
+
 void main()
 {
-    FragColor = vec4(1.0, 0.5, 0.2, 1.0);
+    FragColor = vertexColor;
 }
 )";
 
@@ -146,6 +152,9 @@ void Engine_Init(void* getProcAddress)
 
 void Engine_RenderFrame(int fb, int width, int height, const float* viewProj)
 {
+    auto now = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed = now - start_time;
+
     glBindFramebuffer(GL_FRAMEBUFFER, fb);
     glViewport(0, 0, width, height);
 
@@ -153,6 +162,11 @@ void Engine_RenderFrame(int fb, int width, int height, const float* viewProj)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(g_ShaderProgram);
+
+    float timeValue = elapsed.count();
+    float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+    int vertexColorLocation = glGetUniformLocation(g_ShaderProgram, "vertexColor");
+    glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
     float aspectRatio = (height > 0) ? (float)width / (float)height : 1.0f;
     glUniformMatrix4fv(g_ViewProjLoc, 1, GL_FALSE, viewProj);
