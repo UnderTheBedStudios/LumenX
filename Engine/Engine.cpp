@@ -8,9 +8,12 @@
 #include <math.h>
 #include <unistd.h>
 #include <string>
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "vendor/stb/stb_image.h"
+#include <stb_image.h>
 
 typedef void* (*GLADloadproc)(const char* name);
 
