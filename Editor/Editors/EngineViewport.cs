@@ -84,14 +84,10 @@ public class EngineViewport : OpenGlControlBase, ICustomHitTest
         if (_isFlying || _isPivoting) RequestNextFrameRendering();
     }
 
-    protected override void OnPointerEntered(PointerEventArgs e)
-    {
-        Console.WriteLine("[Cam] PointerEntered viewport");
-    }
+    protected override void OnPointerEntered(PointerEventArgs e) { }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
-        Console.WriteLine($"[Cam] PointerPressed, right={e.GetCurrentPoint(this).Properties.IsRightButtonPressed}");
         if (e.GetCurrentPoint(this).Properties.IsRightButtonPressed)
         {
             _isFlying = true;
@@ -133,7 +129,6 @@ public class EngineViewport : OpenGlControlBase, ICustomHitTest
 
     protected override void OnKeyDown(KeyEventArgs e)
     {
-        Console.WriteLine($"[Cam] KeyDown {e.Key}");
         _keysDown.Add(e.Key);
     }
 
@@ -157,7 +152,6 @@ public class EngineViewport : OpenGlControlBase, ICustomHitTest
             var screenCenter = this.PointToScreen(center);
             X11Interop.WarpPointer(screenCenter.X, screenCenter.Y);
             _ignoreNextMove = true;
-            Console.WriteLine($"[Warp] target=({screenCenter.X},{screenCenter.Y}) scaling={TopLevel.GetTopLevel(this)?.RenderScaling}");
         }
         else if (_isPivoting)
         {
@@ -178,7 +172,6 @@ public class EngineViewport : OpenGlControlBase, ICustomHitTest
             var screenCenter = this.PointToScreen(center);
             X11Interop.WarpPointer(screenCenter.X, screenCenter.Y);
             _ignoreNextMove = true;
-            Console.WriteLine($"[Warp] target=({screenCenter.X},{screenCenter.Y}) scaling={TopLevel.GetTopLevel(this)?.RenderScaling}");
         }
     }
 
