@@ -62,7 +62,7 @@ public class EngineViewport : OpenGlControlBase, ICustomHitTest
             Console.WriteLine("[Wayland] Still no handle at GL init");
 
         IntPtr fnPtr = Marshal.GetFunctionPointerForDelegate(_getProcAddressDelegate);
-        EngineInterop.Engine_Init(fnPtr);
+        EngineInterop.Engine_Init(fnPtr, EngineInterop.FindRepoRoot());
     }
 
     protected override void OnOpenGlRender(GlInterface gl, int fb)

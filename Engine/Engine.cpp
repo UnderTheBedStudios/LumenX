@@ -6,6 +6,11 @@
 #include <cstdio>
 #include <chrono>
 #include <math.h>
+#include <unistd.h>
+#include <string>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "vendor/stb/stb_image.h"
 
 typedef void* (*GLADloadproc)(const char* name);
 
@@ -15,18 +20,25 @@ GLuint g_VAO = 0;
 GLuint g_VBO = 0;
 GLuint g_ShaderProgram = 0;
 GLint g_ViewProjLoc = -1;
+GLuint g_TextureID = 0;
+
+std::string g_AssetRoot;
 
 auto start_time = std::chrono::steady_clock::now();
 
 const char* vertexShaderSrc = R"(
 #version 460 core
 layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec2 aTexCoord;
 
 uniform mat4 uViewProj;
+
+out vec2 vTexCoord;
 
 void main()
 {
     gl_Position = uViewProj * vec4(aPos, 1.0);
+    vTexCoord = aTexCoord;
 }
 )";
 
@@ -34,11 +46,14 @@ const char* fragmentShaderSrc = R"(
 #version 460 core
 out vec4 FragColor;
 
+in vec2 vTexCoord;
+uniform sampler2D uTexture;
+
 uniform vec4 vertexColor;
 
 void main()
 {
-    FragColor = vertexColor;
+    FragColor = texture(uTexture, vTexCoord);
 }
 )";
 
@@ -57,6 +72,37 @@ GLuint CompileShader(GLenum type, const char* source)
         fprintf(stderr, "[Engine] Shader compile error: %s\n", infoLog);
     }
     return shader;
+}
+
+void LoadTexture(const char* path)
+{
+    glGenTextures(1, &g_TextureID);
+    glBindTexture(GL_TEXTURE_2D, g_TextureID);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    stbi_set_flip_vertically_on_load(true);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    int width, height, channels;
+
+    char cwd[1024];
+    getcwd(cwd, sizeof(cwd));
+    fprintf(stderr, "[Engine] CWD: %s\n", cwd);
+
+    unsigned char* data = stbi_load(path, &width, &height, &channels, 0);
+    if (data)
+    {
+        GLenum format = (channels == 4) ? GL_RGBA : GL_RGB;
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+        fprintf(stderr, "[Engine] Failed to load texture: %s\n", path);
+    stbi_image_free(data);
 }
 
 void InitTriangle()
@@ -83,29 +129,46 @@ void InitTriangle()
     glDeleteShader(fragmentShader);
 
     float vertices[] = {
-        0.5f,  0.5f, 0.0f,   // 0: top right front
-        0.5f, -0.5f, 0.0f,   // 1: bottom right front
-        -0.5f,  0.5f, 0.0f,  // 2: top left front
-        -0.5f, -0.5f, 0.0f,  // 3: bottom left front
-        -0.5f, 0.5f, -1.0f,  // 4: top left back
-        -0.5f, -0.5f, -1.0f, // 5: bottom left back
-        0.5f, 0.5f, -1.0f,   // 6: top right back
-        0.5f, -0.5f, -1.0f,  // 7: bottom right back
+        // pos                  // uv
+        // Front (z = 0)
+        0.5f,  0.5f,  0.0f,    1.0f, 1.0f,
+        0.5f, -0.5f,  0.0f,    1.0f, 0.0f,
+        -0.5f,  0.5f,  0.0f,    0.0f, 1.0f,
+        -0.5f, -0.5f,  0.0f,    0.0f, 0.0f,
+        // Back (z = -1)
+        -0.5f,  0.5f, -1.0f,    1.0f, 1.0f,
+        -0.5f, -0.5f, -1.0f,    1.0f, 0.0f,
+        0.5f,  0.5f, -1.0f,    0.0f, 1.0f,
+        0.5f, -0.5f, -1.0f,    0.0f, 0.0f,
+        // Left (x = -0.5)
+        -0.5f,  0.5f,  0.0f,    1.0f, 1.0f,
+        -0.5f, -0.5f,  0.0f,    1.0f, 0.0f,
+        -0.5f,  0.5f, -1.0f,    0.0f, 1.0f,
+        -0.5f, -0.5f, -1.0f,    0.0f, 0.0f,
+        // Right (x = 0.5)
+        0.5f,  0.5f, -1.0f,    1.0f, 1.0f,
+        0.5f, -0.5f, -1.0f,    1.0f, 0.0f,
+        0.5f,  0.5f,  0.0f,    0.0f, 1.0f,
+        0.5f, -0.5f,  0.0f,    0.0f, 0.0f,
+        // Top (y = 0.5)
+        -0.5f,  0.5f, -1.0f,    0.0f, 1.0f,
+        0.5f,  0.5f, -1.0f,    1.0f, 1.0f,
+        -0.5f,  0.5f,  0.0f,    0.0f, 0.0f,
+        0.5f,  0.5f,  0.0f,    1.0f, 0.0f,
+        // Bottom (y = -0.5)
+        -0.5f, -0.5f,  0.0f,    0.0f, 1.0f,
+        0.5f, -0.5f,  0.0f,    1.0f, 1.0f,
+        -0.5f, -0.5f, -1.0f,    0.0f, 0.0f,
+        0.5f, -0.5f, -1.0f,    1.0f, 0.0f,
     };
 
     unsigned int indices[] = {
-        0, 1, 2,   // top right, bottom right, top left all front
-        1, 3, 2,   // bottom right, bottom left, top left all front
-        2, 3, 4,   // top left front, bottom left front, top left back for left
-        3, 4, 5,   // bottom left front, top left back, bottom left back for left
-        0, 1, 7,   // top right front, bottom right front, bottom right back for right
-        0, 6, 7,   // top right front, top right back, bottom right back
-        4, 5, 6,   // top left back, top right back, bottom left back, for back
-        6, 7, 5,   // top right back, bottom right back, bottom left back, for back
-        2, 0, 6,   // top left front, top right front, top right back, for top
-        2, 6, 4,   // top left front, top right back, top left back, for top
-        3, 1, 5,   // bottom left front, bottom right front, bottom left back, for bottom
-        1, 5, 7    // bottom right front, bottom left back, bottom right back, for bottom
+        0, 1, 2,        1, 3, 2,      // front
+        4, 5, 6,        5, 7, 6,      // back
+        8, 9, 10,       9, 11, 10,    // left
+        12, 13, 14,     13, 15, 14,  // right
+        16, 17, 18,     17, 19, 18,  // top
+        20, 21, 22,     21, 23, 22,  // bottom
     };
 
     unsigned int EBO;
@@ -123,8 +186,11 @@ void InitTriangle()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -136,7 +202,7 @@ void InitTriangle()
 
 extern "C" {
 
-void Engine_Init(void* getProcAddress)
+void Engine_Init(void* getProcAddress, const char* assetRoot)
 {
     if (!gladLoadGLLoader((GLADloadproc)getProcAddress))
     {
@@ -148,6 +214,10 @@ void Engine_Init(void* getProcAddress)
     glEnable(GL_DEPTH_TEST);
 
     InitTriangle();
+
+    g_AssetRoot = assetRoot;
+    std::string texturePath = g_AssetRoot + "/Engine/TestTextures/wall.jpg";
+    LoadTexture(texturePath.c_str());
 }
 
 void Engine_RenderFrame(int fb, int width, int height, const float* viewProj)
