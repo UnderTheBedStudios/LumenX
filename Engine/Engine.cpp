@@ -77,15 +77,29 @@ void InitTriangle()
     glDeleteShader(fragmentShader);
 
     float vertices[] = {
-        0.5f,  0.5f, 0.0f,  // 0: top right
-        0.5f, -0.5f, 0.0f,  // 1: bottom right
-        -0.5f,  0.5f, 0.0f,  // 2: top left
-        -0.5f, -0.5f, 0.0f,  // 3: bottom left
+        0.5f,  0.5f, 0.0f,   // 0: top right front
+        0.5f, -0.5f, 0.0f,   // 1: bottom right front
+        -0.5f,  0.5f, 0.0f,  // 2: top left front
+        -0.5f, -0.5f, 0.0f,  // 3: bottom left front
+        -0.5f, 0.5f, -1.0f,  // 4: top left back
+        -0.5f, -0.5f, -1.0f, // 5: bottom left back
+        0.5f, 0.5f, -1.0f,   // 6: top right back
+        0.5f, -0.5f, -1.0f,  // 7: bottom right back
     };
 
     unsigned int indices[] = {
-        0, 1, 2,   // top right, bottom right, top left
-        1, 3, 2    // bottom right, bottom left, top left
+        0, 1, 2,   // top right, bottom right, top left all front
+        1, 3, 2,   // bottom right, bottom left, top left all front
+        2, 3, 4,   // top left front, bottom left front, top left back for left
+        3, 4, 5,   // bottom left front, top left back, bottom left back for left
+        0, 1, 7,   // top right front, bottom right front, bottom right back for right
+        0, 6, 7,   // top right front, top right back, bottom right back
+        4, 5, 6,   // top left back, top right back, bottom left back, for back
+        6, 7, 5,   // top right back, bottom right back, bottom left back, for back
+        2, 0, 6,   // top left front, top right front, top right back, for top
+        2, 6, 4,   // top left front, top right back, top left back, for top
+        3, 1, 5,   // bottom left front, bottom right front, bottom left back, for bottom
+        1, 5, 7    // bottom right front, bottom left back, bottom right back, for bottom
     };
 
     unsigned int EBO;
@@ -125,6 +139,8 @@ void Engine_Init(void* getProcAddress)
     }
     fprintf(stderr, "[Engine] GLAD initialized, GL version %s\n", glGetString(GL_VERSION));
 
+    glEnable(GL_DEPTH_TEST);
+
     InitTriangle();
 }
 
@@ -134,7 +150,7 @@ void Engine_RenderFrame(int fb, int width, int height, const float* viewProj)
     glViewport(0, 0, width, height);
 
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(g_ShaderProgram);
 
@@ -142,7 +158,8 @@ void Engine_RenderFrame(int fb, int width, int height, const float* viewProj)
     glUniformMatrix4fv(g_ViewProjLoc, 1, GL_FALSE, viewProj);
 
     glBindVertexArray(g_VAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
