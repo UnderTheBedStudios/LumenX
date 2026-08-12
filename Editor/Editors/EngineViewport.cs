@@ -11,6 +11,7 @@ using Avalonia.Controls;
 using Avalonia.Platform;
 using SkiaSharp;
 
+using LumenX.GameProject;
 namespace LumenX.Editors;
 
 public class EngineViewport : OpenGlControlBase, ICustomHitTest
@@ -24,12 +25,36 @@ public class EngineViewport : OpenGlControlBase, ICustomHitTest
 
     private bool _ignoreNextMove;
 
-
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate IntPtr GetProcAddressDelegate(IntPtr procNamePtr);
 
     private GetProcAddressDelegate? _getProcAddressDelegate;
     private GlInterface? _gl;
+
+    private LumenX.GameProject.World? _subscribedWorld;
+
+    private void SyncWorldSubscription()
+    {
+        var world = LumenX.GameProject.Project.Current?.ActiveWorld;
+        if (world == _subscribedWorld) return;
+
+        if (_subscribedWorld != null)
+            _subscribedWorld.PropertyChanged -= OnActiveWorldPropertyChanged;
+
+        _subscribedWorld = world;
+
+        if (_subscribedWorld != null)
+            _subscribedWorld.PropertyChanged += OnActiveWorldPropertyChanged;
+    }
+
+    private void OnActiveWorldPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(LumenX.GameProject.World.LightDir)
+                            or nameof(LumenX.GameProject.World.LightColor))
+        {
+            RequestNextFrameRendering();
+        }
+    }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
@@ -67,6 +92,8 @@ public class EngineViewport : OpenGlControlBase, ICustomHitTest
 
     protected override void OnOpenGlRender(GlInterface gl, int fb)
     {
+        SyncWorldSubscription();
+
         int width = Math.Max(1, (int)Bounds.Width);
         int height = Math.Max(1, (int)Bounds.Height);
         float aspect = (float)width / height;
@@ -79,7 +106,14 @@ public class EngineViewport : OpenGlControlBase, ICustomHitTest
         var proj = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 4, aspect, 0.1f, 1000f);
         var vp = view * proj;
 
-        EngineInterop.Engine_RenderFrame(fb, width, height, ref vp);
+        var activeWorld = Project.Current?.ActiveWorld;
+        var lightDir = activeWorld?.LightDir ?? new Vector3(1f, -1.0f, 1f);
+        var lightColor = activeWorld?.LightColor ?? new Vector3(1.0f, 1.0f, 1.0f);
+        
+        var viewPos    = _camera.Position;
+        var model = Matrix4x4.Identity; // placeholder until I have real per-object transforms
+        EngineInterop.Engine_SetLight(ref lightDir, ref lightColor, ref viewPos);
+        EngineInterop.Engine_RenderFrame(fb, width, height, ref vp, ref model);
 
         if (_isFlying || _isPivoting) RequestNextFrameRendering();
     }

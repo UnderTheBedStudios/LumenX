@@ -33,6 +33,16 @@
             HorizontalAlignment="Stretch" VerticalAlignment="Top"
             Background="#AFAFAF"/>
             <local:ProjectLayoutView/>
+            <Viewbox Stretch="Uniform" Grid.Row="1" VerticalAlignment="Top" Margin="10">
+                <TabControl TabStripPlacement="Top">
+                    <TabItem Header="Details">
+                        
+                    </TabItem>
+                    <TabItem Header="World Settings">
+                        <local:WorldSettingsView/>
+                    </TabItem>
+                </TabControl>
+            </Viewbox>
         </Grid>
     </Grid>
 </UserControl>

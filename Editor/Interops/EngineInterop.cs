@@ -9,7 +9,13 @@ namespace LumenX
         internal static extern void Engine_Init(IntPtr getProcAddress, string assetRoot);
 
         [DllImport("Engine")]
-        internal static extern void Engine_RenderFrame(int fb, int width, int height, ref System.Numerics.Matrix4x4 viewProj);
+        internal static extern void Engine_RenderFrame(int fb, int width, int height, ref System.Numerics.Matrix4x4 viewProj, ref System.Numerics.Matrix4x4 model);
+
+        [DllImport("Engine")]
+        internal static extern void Engine_SetLight(
+            ref System.Numerics.Vector3 lightDir,
+            ref System.Numerics.Vector3 lightColor,
+            ref System.Numerics.Vector3 viewPos);
 
         internal static string FindRepoRoot()
         {
