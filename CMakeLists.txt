@@ -19,4 +19,6 @@ add_library(Engine SHARED
 
 # If you have include folders
 target_include_directories(Engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(Engine PUBLIC Engine/vendor/stb)
+target_include_directories(Engine PRIVATE Engine/vendor/glm)
 target_link_libraries(Engine PUBLIC glad OpenGL::GL)

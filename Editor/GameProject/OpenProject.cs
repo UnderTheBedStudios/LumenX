@@ -84,7 +84,10 @@ namespace LumenX.GameProject
             WriteProjectData();
 
             Console.WriteLine($"[DEBUG] Active Project: {project.ProjectName}");
-            return Project.Load(project.FullPath);
+            Console.WriteLine($"[DEBUG] Full Path: {project.FullPath}");
+            var loaded = Project.Load(project.FullPath);
+            Console.WriteLine($"[DEBUG] LightDir after load: {loaded.ActiveWorld?.LightDir}");
+            return loaded;
         }
 
         static OpenProject()
