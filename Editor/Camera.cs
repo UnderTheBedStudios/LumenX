@@ -10,6 +10,7 @@ public class Camera
     public Vector3 Position = new(0,0,3);
     public float Yaw = -90f, Pitch = 0f;
     public float MoveSpeed = 5f, LookSensitivity = 0.15f;
+    public float PanSensitivity = 0.01f;
 
     public void ApplyMouseDelta(double dx, double dy)
     {
@@ -20,16 +21,20 @@ public class Camera
 
     public void Update(HashSet<Key> keys, float dt)
     {
-        var forward = Forward;
-        var right = Vector3.Normalize(Vector3.Cross(forward, Vector3.UnitY));
         float speed = MoveSpeed * dt;
 
-        if (keys.Contains(Key.W)) Position += forward * speed;
-        if (keys.Contains(Key.S)) Position -= forward * speed;
-        if (keys.Contains(Key.A)) Position -= right * speed;
-        if (keys.Contains(Key.D)) Position += right * speed;
+        if (keys.Contains(Key.W)) Position += Forward * speed;
+        if (keys.Contains(Key.S)) Position -= Forward * speed;
+        if (keys.Contains(Key.A)) Position -= Right * speed;
+        if (keys.Contains(Key.D)) Position += Right * speed;
         if (keys.Contains(Key.Q)) Position -= Vector3.UnitY * speed;
         if (keys.Contains(Key.E)) Position += Vector3.UnitY * speed;
+    }
+
+    public void ApplyPivot(double dx, double dy, float dt)
+    {
+        Position += Right * (float)dx * PanSensitivity;
+        Position -= Up * (float)dy * PanSensitivity;
     }
 
     public Matrix4x4 GetViewMatrix() =>
@@ -39,6 +44,16 @@ public class Camera
             MathF.Cos(ToRad(Yaw)) * MathF.Cos(ToRad(Pitch)),
             MathF.Sin(ToRad(Pitch)),
             MathF.Sin(ToRad(Yaw)) * MathF.Cos(ToRad(Pitch))
+    ));
+
+    public Vector3 Right => Vector3.Normalize(Vector3.Cross(
+        Forward,
+        Vector3.UnitY
+    ));
+
+    public Vector3 Up => Vector3.Normalize(Vector3.Cross(
+        Right,
+        Forward
     ));
     private static float ToRad(float deg) => deg * MathF.PI / 180f;
 }

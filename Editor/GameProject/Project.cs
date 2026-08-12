@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Numerics;
 using System.Runtime.Serialization;
 using System.Windows.Input;
 using Avalonia;
@@ -52,10 +53,10 @@ namespace LumenX.GameProject
         public ICommand AddWorld { get; private set; }
         public ICommand RemoveWorld { get; private set; }
 
-        private void AddWorldInternal(string worldName)
+        private void AddWorldInternal(string worldName, Vector3 Lightdir, Vector3 LightColor)
         {
             Debug.Assert(!string.IsNullOrEmpty(worldName.Trim()));
-            _worlds.Add(new World(worldName, this));
+            _worlds.Add(new World(worldName, this, Lightdir, LightColor));
         }
         private void RemoveWorldInternal(World world)
         {
@@ -92,7 +93,7 @@ namespace LumenX.GameProject
 
             AddWorld = new RelayCommand<object>(x =>
             {
-                AddWorldInternal($"New World {_worlds.Count}");
+                AddWorldInternal($"New World {_worlds.Count}", new Vector3(1.2f, -1.0f, 0.2f), new Vector3(1.0f, 1.0f, 1.0f));
                 var newWorld = _worlds.Last();
                 var worldIndex = _worlds.Count - 1;
                 undoRedo.Add(new UndoRedoAction(
