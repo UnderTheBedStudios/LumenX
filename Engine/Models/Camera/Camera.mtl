@@ -1,0 +1,13 @@
+# Blender 5.1.2 MTL File: 'Camera.blend'
+# www.blender.org
+
+newmtl Camera
+Ka 0.576923 0.576923 0.576923
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 3
+map_Kd Textures/CamTex.png
+map_Ns Textures/CamRough.png
+map_refl Textures/CamMet.png

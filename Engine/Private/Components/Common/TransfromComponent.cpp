@@ -1,6 +1,4 @@
-#include "Public/Components/Common/TransformComponent.h"
-#include <glm/glm.hpp>
-#include <glm/gtx/quaternion.hpp>
+#include "Engine/Public/Components/Common/TransformComponent.h"
 #include <cmath>
 
 TransformComponent::TransformComponent()
