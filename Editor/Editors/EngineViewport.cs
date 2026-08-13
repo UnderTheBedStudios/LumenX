@@ -219,4 +219,10 @@ public class EngineViewport : OpenGlControlBase, ICustomHitTest
         string? procName = Marshal.PtrToStringAnsi(procNamePtr);
         return procName != null ? _gl!.GetProcAddress(procName) : IntPtr.Zero;
     }
+
+    protected override void OnOpenGlDeinit(GlInterface gl)
+    {
+        EngineInterop.Engine_Shutdown();
+        base.OnOpenGlDeinit(gl);
+    }
 }

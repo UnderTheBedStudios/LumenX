@@ -2,6 +2,7 @@
 
 #include "pch.h"
 #include "framework.h"
+#include "Public/General/Shader.h"
 #include <glad/glad.h>
 #include <cstdio>
 #include <chrono>
@@ -11,6 +12,7 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
+#include <memory>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -21,15 +23,16 @@ namespace {
 
 GLuint g_VAO = 0;
 GLuint g_VBO = 0;
-GLuint g_ShaderProgram = 0;
-GLint g_ViewProjLoc = -1;
+GLuint g_EBO = 0;
+
+std::unique_ptr<Shader> g_MainShader;
+std::unique_ptr<Shader> g_DepthShader;
+
 GLuint g_TextureID = 0;
 
 glm::vec3 g_LightDir = glm::normalize(glm::vec3(0.3f, 1.0f, 0.2f));
 glm::vec3 g_LightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 glm::vec3 g_ViewPos    = glm::vec3(0.0f);
-
-GLint g_ModelLoc = -1, g_LightDirLoc = -1, g_LightColorLoc = -1, g_ViewPosLoc = -1;
 
 std::string g_AssetRoot;
 
@@ -37,132 +40,12 @@ GLuint g_ShadowFBO = 0;
 GLuint g_ShadowMap = 0;
 const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
 
-GLuint g_DepthShaderProgram = 0;
-GLint g_DepthLightSpaceLoc = -1, g_DepthModelLoc = -1;
-
-GLint g_LightSpaceLoc = -1, g_ShadowMapLoc = -1;
-
 glm::mat4 g_LightSpaceMatrix = glm::mat4(1.0f);
 
-const char* vertexShaderSrc = R"(
-#version 460 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec2 aTexCoord;
-layout (location = 2) in vec3 aNormal;
-
-uniform mat4 uModel;
-uniform mat4 uViewProj;
-uniform mat4 uLightSpaceMatrix;
-
-out vec2 vTexCoord;
-out vec3 vNormal;
-out vec3 vFragPos;
-out vec4 vFragPosLightSpace;
-
-void main()
-{
-    vec4 worldPos = uModel * vec4(aPos, 1.0);
-    gl_Position = uViewProj * worldPos;
-
-    vFragPos = worldPos.xyz;
-    vNormal = mat3(transpose(inverse(uModel))) * aNormal;
-    vTexCoord = aTexCoord;
-    vFragPosLightSpace = uLightSpaceMatrix * worldPos;
-}
-)";
-
-const char* fragmentShaderSrc = R"(
-#version 460 core
-out vec4 FragColor;
-
-in vec2 vTexCoord;
-in vec3 vNormal;
-in vec3 vFragPos;
-
-uniform sampler2D uTexture;
-uniform sampler2D uShadowMap;
-uniform vec4 vertexColor;
-uniform vec4 ambientLightColor;
-
-uniform vec3 uLightDir;      // normalized, pointing FROM the surface TOWARD the light
-uniform vec3 uLightColor;
-uniform vec3 uViewPos;       // camera world position, for specular
-
-in vec4 vFragPosLightSpace;
-
-float ShadowCalculation(vec4 fragPosLightSpace, vec3 normal, vec3 lightDir)
-{
-    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-    projCoords = projCoords * 0.5 + 0.5;
-
-    if (projCoords.z > 1.0)
-        return 0.0;
-
-    float currentDepth = projCoords.z;
-    float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.0005);
-
-    float shadow = 0.0;
-    vec2 texelSize = 1.0 / textureSize(uShadowMap, 0);
-    for (int x = -1; x <= 1; ++x)
-        for (int y = -1; y <= 1; ++y)
-        {
-            float pcfDepth = texture(uShadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
-            shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
-        }
-    shadow /= 9.0;
-
-    return shadow;
-}
-
-void main()
-{
-    vec3 norm = normalize(vNormal);
-
-    float diff = max(dot(norm, uLightDir), 0.0);
-    vec3 diffuse = diff * uLightColor;
-
-    float shadow = ShadowCalculation(vFragPosLightSpace, norm, uLightDir);
-    vec3 lighting = ambientLightColor.rgb + (1.0 - shadow) * diffuse;
-
-    vec4 texColor = texture(uTexture, vTexCoord) * vertexColor;
-    FragColor = vec4(texColor.rgb * lighting, texColor.a);
-}
-)";
-
-const char* depthVertexShaderSrc = R"(
-#version 460 core
-layout (location = 0) in vec3 aPos;
-
-uniform mat4 uLightSpaceMatrix;
-uniform mat4 uModel;
-
-void main()
-{
-    gl_Position = uLightSpaceMatrix * uModel * vec4(aPos, 1.0);
-}
-)";
-
-const char* depthFragmentShaderSrc = R"(
-#version 460 core
-void main() { }
-)";
-
-GLuint CompileShader(GLenum type, const char* source)
-{
-    GLuint shader = glCreateShader(type);
-    glShaderSource(shader, 1, &source, nullptr);
-    glCompileShader(shader);
-
-    GLint success;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        char infoLog[512];
-        glGetShaderInfoLog(shader, sizeof(infoLog), nullptr, infoLog);
-        fprintf(stderr, "[Engine] Shader compile error: %s\n", infoLog);
-    }
-    return shader;
-}
+const char* vertexShaderPath        = "/Engine/Shaders/basic.vert";
+const char* fragmentShaderPath      = "/Engine/Shaders/basic.frag";
+const char* depthVertexShaderPath   = "/Engine/Shaders/depth.vert";
+const char* depthFragmentShaderPath = "/Engine/Shaders/depth.frag";
 
 void LoadTexture(const char* path)
 {
@@ -197,27 +80,6 @@ void LoadTexture(const char* path)
 
 void InitTriangle()
 {
-    GLuint vertexShader = CompileShader(GL_VERTEX_SHADER, vertexShaderSrc);
-    GLuint fragmentShader = CompileShader(GL_FRAGMENT_SHADER, fragmentShaderSrc);
-
-    g_ShaderProgram = glCreateProgram();
-    glAttachShader(g_ShaderProgram, vertexShader);
-    glAttachShader(g_ShaderProgram, fragmentShader);
-    glLinkProgram(g_ShaderProgram);
-
-    GLint linkSuccess;
-    glGetProgramiv(g_ShaderProgram, GL_LINK_STATUS, &linkSuccess);
-    if (!linkSuccess)
-    {
-        char infoLog[512];
-        glGetProgramInfoLog(g_ShaderProgram, sizeof(infoLog), nullptr, infoLog);
-        fprintf(stderr, "[Engine] Shader link error: %s\n", infoLog);
-    }
-
-    // Shader objects are only needed during linking — safe to delete once linked
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
     float vertices[] = {
         // pos                  // uv           // normal
         // Front (z = 0)
@@ -261,8 +123,7 @@ void InitTriangle()
         20, 21, 22,     21, 23, 22,  // bottom
     };
 
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
+    glGenBuffers(1, &g_EBO);
 
     glGenVertexArrays(1, &g_VAO);
     glGenBuffers(1, &g_VBO);
@@ -273,7 +134,7 @@ void InitTriangle()
     glBindBuffer(GL_ARRAY_BUFFER, g_VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     
     // Pos
@@ -290,14 +151,6 @@ void InitTriangle()
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-
-    g_ViewProjLoc    = glGetUniformLocation(g_ShaderProgram, "uViewProj");
-    g_ModelLoc       = glGetUniformLocation(g_ShaderProgram, "uModel");
-    g_LightDirLoc    = glGetUniformLocation(g_ShaderProgram, "uLightDir");
-    g_LightColorLoc  = glGetUniformLocation(g_ShaderProgram, "uLightColor");
-    g_ViewPosLoc     = glGetUniformLocation(g_ShaderProgram, "uViewPos");
-    g_LightSpaceLoc  = glGetUniformLocation(g_ShaderProgram, "uLightSpaceMatrix");
-    g_ShadowMapLoc   = glGetUniformLocation(g_ShaderProgram, "uShadowMap");
 }
 
 void InitShadowMap()
@@ -323,18 +176,6 @@ void InitShadowMap()
         fprintf(stderr, "[Engine] Shadow FBO incomplete\n");
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    GLuint vs = CompileShader(GL_VERTEX_SHADER, depthVertexShaderSrc);
-    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, depthFragmentShaderSrc);
-    g_DepthShaderProgram = glCreateProgram();
-    glAttachShader(g_DepthShaderProgram, vs);
-    glAttachShader(g_DepthShaderProgram, fs);
-    glLinkProgram(g_DepthShaderProgram);
-    glDeleteShader(vs);
-    glDeleteShader(fs);
-
-    g_DepthLightSpaceLoc = glGetUniformLocation(g_DepthShaderProgram, "uLightSpaceMatrix");
-    g_DepthModelLoc      = glGetUniformLocation(g_DepthShaderProgram, "uModel");
 }
 
 void UpdateLightSpaceMatrix()
@@ -352,6 +193,19 @@ void UpdateLightSpaceMatrix()
 
 extern "C" {
 
+void Engine_Shutdown()
+{
+    glDeleteBuffers(1, &g_EBO);
+    glDeleteBuffers(1, &g_VBO);
+    glDeleteVertexArrays(1, &g_VAO);
+    glDeleteTextures(1, &g_TextureID);
+    glDeleteTextures(1, &g_ShadowMap);
+    glDeleteFramebuffers(1, &g_ShadowFBO);
+
+    g_MainShader.reset();
+    g_DepthShader.reset();
+}
+
 void Engine_Init(void* getProcAddress, const char* assetRoot)
 {
     if (!gladLoadGLLoader((GLADloadproc)getProcAddress))
@@ -363,11 +217,20 @@ void Engine_Init(void* getProcAddress, const char* assetRoot)
 
     glEnable(GL_DEPTH_TEST);
 
+    g_AssetRoot = assetRoot;   // move this up first
+
+    std::string vertPath  = g_AssetRoot + vertexShaderPath;
+    std::string fragPath  = g_AssetRoot + fragmentShaderPath;
+    std::string dVertPath = g_AssetRoot + depthVertexShaderPath;
+    std::string dFragPath = g_AssetRoot + depthFragmentShaderPath;
+
+    g_MainShader  = std::make_unique<Shader>(vertPath.c_str(), fragPath.c_str());
+    g_DepthShader = std::make_unique<Shader>(dVertPath.c_str(), dFragPath.c_str());
+
     InitTriangle();
     InitShadowMap();
     UpdateLightSpaceMatrix();
 
-    g_AssetRoot = assetRoot;
     std::string texturePath = g_AssetRoot + "/Engine/TestTextures/wall.jpg";
     LoadTexture(texturePath.c_str());
 }
@@ -382,9 +245,9 @@ void Engine_RenderFrame(int fb, int width, int height, const float* viewProj, co
     glEnable(GL_CULL_FACE);
     glCullFace(GL_FRONT);
 
-    glUseProgram(g_DepthShaderProgram);
-    glUniformMatrix4fv(g_DepthLightSpaceLoc, 1, GL_FALSE, glm::value_ptr(g_LightSpaceMatrix));
-    glUniformMatrix4fv(g_DepthModelLoc, 1, GL_FALSE, model);
+    g_DepthShader->use();
+    g_DepthShader->setMat4("uLightSpaceMatrix", g_LightSpaceMatrix);
+    g_DepthShader->setMat4("uModel", glm::make_mat4(model));
 
     glBindVertexArray(g_VAO);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -399,27 +262,23 @@ void Engine_RenderFrame(int fb, int width, int height, const float* viewProj, co
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glUseProgram(g_ShaderProgram);
-
-    glUniformMatrix4fv(g_ViewProjLoc, 1, GL_FALSE, viewProj);
-    glUniformMatrix4fv(g_ModelLoc, 1, GL_FALSE, model);
-    glUniformMatrix4fv(g_LightSpaceLoc, 1, GL_FALSE, glm::value_ptr(g_LightSpaceMatrix));
-    glUniform3fv(g_LightDirLoc, 1, glm::value_ptr(g_LightDir));
-    glUniform3fv(g_LightColorLoc, 1, glm::value_ptr(g_LightColor));
-    glUniform3fv(g_ViewPosLoc, 1, glm::value_ptr(g_ViewPos));
-
-    int vertexColorLocation = glGetUniformLocation(g_ShaderProgram, "vertexColor");
-    int ambientLightColor = glGetUniformLocation(g_ShaderProgram, "ambientLightColor");
-    glUniform4f(vertexColorLocation, 1.0f, 1.0f, 1.0f, 1.0f);
-    glUniform4f(ambientLightColor, 0.15f, 0.15f, 0.15f, 1.0f);
+    g_MainShader->use();
+    g_MainShader->setMat4("uViewProj", glm::make_mat4(viewProj));
+    g_MainShader->setMat4("uModel", glm::make_mat4(model));
+    g_MainShader->setMat4("uLightSpaceMatrix", g_LightSpaceMatrix);
+    g_MainShader->setVec3("uLightDir", g_LightDir);
+    g_MainShader->setVec3("uLightColor", g_LightColor);
+    g_MainShader->setVec3("uViewPos", g_ViewPos);
+    g_MainShader->setVec4("vertexColor", glm::vec4(1.0f));
+    g_MainShader->setVec4("ambientLightColor", glm::vec4(0.15f, 0.15f, 0.15f, 1.0f));
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, g_TextureID);
-    glUniform1i(glGetUniformLocation(g_ShaderProgram, "uTexture"), 0);
+    g_MainShader->setInt("uTexture", 0);
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, g_ShadowMap);
-    glUniform1i(g_ShadowMapLoc, 1);
+    g_MainShader->setInt("uShadowMap", 1);
 
     glBindVertexArray(g_VAO);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

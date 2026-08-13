@@ -16,6 +16,9 @@ namespace LumenX
             ref System.Numerics.Vector3 lightDir,
             ref System.Numerics.Vector3 lightColor,
             ref System.Numerics.Vector3 viewPos);
+        
+        [DllImport("Engine")]
+        internal static extern void Engine_Shutdown();
 
         internal static string FindRepoRoot()
         {
