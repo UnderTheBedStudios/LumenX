@@ -77,17 +77,17 @@ void Mesh::SetupMesh()
                            sizeof(Vertex),
                            (void*)offsetof(Vertex, Position));
 
-    // TexCoords -> location 1 (matches basic.vert's aTexCoord)
+    // Normal -> location 1 (matches basic.vert's aNormal)
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,
+                            sizeof(Vertex),
+                            (void*)offsetof(Vertex, Normal));
+    // TexCoords -> location 2 (matches basic.vert's aTexCoord)
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
                            sizeof(Vertex),
                            (void*)offsetof(Vertex, TexCoords));
 
-    // Normal -> location 2 (matches basic.vert's aNormal)
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE,
-                           sizeof(Vertex),
-                           (void*)offsetof(Vertex, Normal));
 
     glBindVertexArray(0);
 }
