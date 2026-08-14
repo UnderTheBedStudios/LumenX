@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Public/Base.h"
+#include "Engine/Public/Base.h"
 
 class BaseComponent : public Base
 {
