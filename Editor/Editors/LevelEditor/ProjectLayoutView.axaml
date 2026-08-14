@@ -27,15 +27,18 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="proj:World">
+                        <Grid>
                         <Expander IsExpanded="{Binding Active, Mode=OneWay}">
                             <Expander.Header>
-                                <Grid>
-                                    <TextBlock Text="{Binding WorldName}"/>
-                                    <Button x:DataType="proj:Project" Content="Remove World" Command="{Binding RemoveWorld}"
-                                            CommandParameter="{Binding}" Margin="20" Focusable="False"/>
-                                </Grid>
+                                    <TextBlock Grid.Column="0" Text="{Binding WorldName}" VerticalAlignment="Center"/>
                             </Expander.Header>
                         </Expander>
+                        <Button Grid.Column="1" Content="Remove World" Margin="180, 0, 0, 0"
+                                        Command="{Binding #Root.DataContext.RemoveWorld}"
+                                        CommandParameter="{Binding}"
+                                        x:CompileBindings="False"
+                                        Focusable="False"/>
+                        </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
